@@ -104,7 +104,6 @@ export default function ResultsDashboard({ result, date }: Props) {
           forecastPrices={result.forecast_prices}
           chargeMw={result.charge_mw}
           dischargeMw={result.discharge_mw}
-          capacityMwh={result.soc_max_mwh}
         />
         <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-marble-500">
           <span className="flex items-center gap-1.5">
