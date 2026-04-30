@@ -7,30 +7,32 @@ import {
 import { SOC_TIME_LABELS } from "@/lib/utils";
 
 interface Props {
-  socMwh:    number[];
-  socMinMwh: number;
-  socMaxMwh: number;
+  socMwh:      number[];
+  socMinMwh:   number;
+  socMaxMwh:   number;
+  capacityMwh: number;
 }
 
-const CustomTooltip = ({ active, payload, label }: {
-  active?: boolean;
-  payload?: Array<{ value: number }>;
-  label?: string;
-}) => {
+const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
   return (
     <div className="rounded border border-aegean-700 bg-aegean-900 px-3 py-2 text-xs shadow-xl">
       <p className="mb-1 text-marble-500">{label}</p>
-      <p className="font-semibold text-gold-400">{payload[0].value.toFixed(3)} MWh</p>
+      <p className="font-semibold text-gold-400">{payload[0].value.toFixed(1)}%</p>
     </div>
   );
 };
 
-export default function SoCChart({ socMwh, socMinMwh, socMaxMwh }: Props) {
-  // Clamp values to the declared operating window — fixes the >90% display bug
+export default function SoCChart({ socMwh, socMinMwh, socMaxMwh, capacityMwh }: Props) {
+  const toPct = (mwh: number) =>
+    Math.round((Math.min(socMaxMwh, Math.max(socMinMwh, mwh)) / capacityMwh) * 1000) / 10;
+
+  const minPct = Math.round((socMinMwh / capacityMwh) * 1000) / 10;
+  const maxPct = Math.round((socMaxMwh / capacityMwh) * 1000) / 10;
+
   const data = socMwh.map((soc, i) => ({
     time: i % 8 === 0 ? SOC_TIME_LABELS[i] : "",
-    soc:  Math.round(Math.min(socMaxMwh, Math.max(socMinMwh, soc)) * 1000) / 1000,
+    soc:  toPct(soc),
   }));
 
   return (
@@ -49,27 +51,26 @@ export default function SoCChart({ socMwh, socMinMwh, socMaxMwh }: Props) {
           axisLine={{ stroke: "#173353" }}
           tickLine={false}
         />
-        {/* Y-axis domain hard-capped to [socMinMwh, socMaxMwh] — no padding beyond the constraint */}
         <YAxis
-          domain={[socMinMwh, socMaxMwh]}
+          domain={[minPct, maxPct]}
           tick={{ fill: "#7A8FA8", fontSize: 10 }}
           axisLine={false}
           tickLine={false}
-          tickFormatter={(v) => v.toFixed(1)}
-          width={36}
+          tickFormatter={(v) => `${v}%`}
+          width={38}
         />
         <Tooltip content={<CustomTooltip />} />
         <ReferenceLine
-          y={socMinMwh}
+          y={minPct}
           stroke="rgba(196,83,58,0.5)"
           strokeDasharray="4 4"
-          label={{ value: "min", fill: "#C4533A", fontSize: 9, position: "insideTopRight" }}
+          label={{ value: `${minPct}%`, fill: "#C4533A", fontSize: 9, position: "insideTopRight" }}
         />
         <ReferenceLine
-          y={socMaxMwh}
+          y={maxPct}
           stroke="rgba(76,175,130,0.5)"
           strokeDasharray="4 4"
-          label={{ value: "max", fill: "#4CAF82", fontSize: 9, position: "insideTopRight" }}
+          label={{ value: `${maxPct}%`, fill: "#4CAF82", fontSize: 9, position: "insideTopRight" }}
         />
         <Area
           type="monotone"

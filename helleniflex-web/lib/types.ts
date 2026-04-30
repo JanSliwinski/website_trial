@@ -17,24 +17,20 @@ export interface BatteryPreset {
   battery: BatteryConfig;
 }
 
-export interface OptimizeRequest {
-  date:    string;
-  battery: BatteryConfig;
-}
-
 export interface OptimizeResult {
-  forecast_prices:     number[];      // 96 values, €/MWh
-  charge_mw:           number[];      // 96 values
-  discharge_mw:        number[];      // 96 values
-  net_mw:              number[];      // 96 values
+  forecast_prices:     number[];
+  charge_mw:           number[];
+  discharge_mw:        number[];
+  net_mw:              number[];
   soc_mwh:             number[];      // 97 values (includes t=0)
   soc_min_mwh:         number;
   soc_max_mwh:         number;
-  revenue_eur:         number;        // gross dispatch revenue
-  net_revenue_eur:     number;        // after degradation cost
-  capture_rate:        number | null; // % of perfect foresight oracle
-  capture_rate_window: string | null; // e.g. "same-day oracle (synthetic)"
-  cycles:              number;        // equivalent full cycles
-  status:              string;        // "optimal" | "optimal_inaccurate" | …
-  forecaster:          string;        // model name used
+  capacity_mwh:        number;        // total battery capacity
+  revenue_eur:         number;
+  net_revenue_eur:     number;
+  capture_rate:        number | null;
+  capture_rate_window: string | null;
+  cycles:              number;
+  status:              string;
+  forecaster:          string;
 }
