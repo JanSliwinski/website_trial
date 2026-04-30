@@ -78,7 +78,7 @@ export default function ResultsDashboard({ result, date }: Props) {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-base font-semibold text-marble-200">
-            Dispatch Plan &middot; {date}
+            Dispatch Scenario &middot; {date}
           </h2>
           <p className="mt-0.5 text-xs text-marble-500">
             {result.forecaster} &middot; {result.status}
@@ -97,8 +97,8 @@ export default function ResultsDashboard({ result, date }: Props) {
 
       {/* ── BID SCHEDULE ── primary chart */}
       <ChartCard
-        title="Tomorrow's Bid Schedule"
-        subtitle={`Expected revenue per 15-min slot · Gold = sell (discharge) · Blue = buy (charge) · Line = cumulative total`}
+        title="Scenario Bid Schedule"
+        subtitle={`Modelled revenue per 15-min slot · Gold = sell (discharge) · Blue = buy (charge) · Line = cumulative total`}
       >
         <BidChart
           forecastPrices={result.forecast_prices}
@@ -119,7 +119,7 @@ export default function ResultsDashboard({ result, date }: Props) {
             Cumulative revenue
           </span>
           <span className="ml-auto font-semibold text-gold-400">
-            Expected: +{totalBidRevenue.toFixed(2)} €
+            Scenario: +{totalBidRevenue.toFixed(2)} €
           </span>
         </div>
       </ChartCard>
@@ -127,7 +127,7 @@ export default function ResultsDashboard({ result, date }: Props) {
       {/* ── PRICE FORECAST ── */}
       <ChartCard
         title="Price Forecast"
-        subtitle={`Range ${minPrice} – ${peakPrice} €/MWh · Ridge ensemble forecaster`}
+        subtitle={`Range ${minPrice} – ${peakPrice} €/MWh · Model-generated input curve`}
       >
         <PriceChart prices={result.forecast_prices} />
       </ChartCard>
@@ -167,7 +167,7 @@ export default function ResultsDashboard({ result, date }: Props) {
         {[
           ["Charge throughput",   `${totalCharge.toFixed(2)} MWh`],
           ["Discharge throughput",`${totalDischarge.toFixed(2)} MWh`],
-          ["Round-trip eff.",     `${(totalDischarge / (totalCharge || 1) * 100).toFixed(1)}%`],
+          ["Discharge / charge",  `${(totalDischarge / (totalCharge || 1) * 100).toFixed(1)}%`],
         ].map(([label, value]) => (
           <div key={label} className="text-center">
             <p className="helios-label">{label}</p>

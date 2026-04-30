@@ -24,12 +24,7 @@ export function fmtEur(v: number): string {
   }).format(v);
 }
 
-export function fmtPct(v: number | null): string {
-  if (v === null) return "—";
-  return v.toFixed(1) + "%";
-}
-
-/** Min date the optimizer supports (14+ days of synthetic history). */
+/** Min date the optimizer supports for demo scenarios. */
 export const DATE_MIN = "2024-01-20";
-/** Max date covered by synthetic data. */
+/** Max date covered by demo scenarios. */
 export const DATE_MAX = "2026-12-30";

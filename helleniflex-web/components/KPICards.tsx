@@ -1,8 +1,8 @@
 "use client";
 
-import { TrendingUp, Target, RotateCcw } from "lucide-react";
+import { TrendingUp, Zap, RotateCcw } from "lucide-react";
 import type { OptimizeResult } from "@/lib/types";
-import { fmtEur, fmtPct } from "@/lib/utils";
+import { fmtEur } from "@/lib/utils";
 
 interface CardProps {
   icon:   React.ReactNode;
@@ -36,6 +36,7 @@ function Card({ icon, label, value, sub, accent }: CardProps) {
 
 export default function KPICards({ result }: { result: OptimizeResult }) {
   const dischargedMwh = result.discharge_mw.reduce((a, b) => a + b, 0) * 0.25;
+  const chargedMwh = result.charge_mw.reduce((a, b) => a + b, 0) * 0.25;
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       <Card
@@ -46,10 +47,10 @@ export default function KPICards({ result }: { result: OptimizeResult }) {
         accent="gold"
       />
       <Card
-        icon={<Target size={16} />}
-        label="Capture Rate"
-        value={fmtPct(result.capture_rate)}
-        sub={result.capture_rate_window ?? "vs. perfect foresight"}
+        icon={<Zap size={16} />}
+        label="Energy Moved"
+        value={`${(chargedMwh + dischargedMwh).toFixed(2)} MWh`}
+        sub={`${chargedMwh.toFixed(2)} MWh charged`}
         accent="olive"
       />
       <Card

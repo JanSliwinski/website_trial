@@ -77,8 +77,7 @@ export default function Home() {
               <span className="rounded border border-gold-600/30 bg-gold-500/10 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-gold-400 whitespace-nowrap">
                 Forecast
               </span>
-              <Link href="/data"     className="rounded px-2.5 py-1.5 text-[11px] font-medium uppercase tracking-widest text-marble-500 hover:text-marble-300 transition-colors whitespace-nowrap">Market</Link>
-              <Link href="/backtest" className="rounded px-2.5 py-1.5 text-[11px] font-medium uppercase tracking-widest text-marble-500 hover:text-marble-300 transition-colors whitespace-nowrap">Backtest</Link>
+              <Link href="/backtest" className="rounded px-2.5 py-1.5 text-[11px] font-medium uppercase tracking-widest text-marble-500 hover:text-marble-300 transition-colors whitespace-nowrap">Analysis</Link>
             </div>
 
             <div className="hidden items-center gap-4 text-xs text-marble-600 lg:flex">
@@ -97,7 +96,7 @@ export default function Home() {
               Battery Storage Optimisation
             </h1>
             <p className="mt-1.5 text-sm text-marble-500">
-              Tomorrow&apos;s Bid &middot;{" "}
+              Dispatch Scenario &middot;{" "}
               <span className="text-marble-400">{formatDateLong(TOMORROW)}</span>
             </p>
           </div>
@@ -124,7 +123,7 @@ export default function Home() {
         </main>
 
         <footer className="mt-12 border-t border-aegean-700/40 py-5 text-center text-xs text-marble-600">
-          Helios · Battery optimisation for the Greek DAM · Synthetic market data
+          Helios · Greek DAM battery analysis · Demo price inputs until verified feeds are connected
         </footer>
       </div>
     </div>
@@ -138,10 +137,10 @@ function EmptyState({ loading }: { loading: boolean }) {
         <Loader2 size={26} className="animate-spin text-gold-500" />
         <div className="text-center">
           <p className="text-sm font-semibold text-marble-200">Solving dispatch&hellip;</p>
-          <p className="mt-1 text-xs text-marble-600">Ridge forecaster · HiGHS MILP · ~30s cold start</p>
+          <p className="mt-1 text-xs text-marble-600">Price model · HiGHS MILP · ~30s cold start</p>
         </div>
         <div className="flex flex-col gap-1.5 text-xs text-marble-600">
-          {["Loading price history","Fitting Ridge forecaster","Running MILP dispatch","Computing capture rate"].map((step) => (
+          {["Loading price inputs","Preparing forecast curve","Running MILP dispatch","Checking battery constraints"].map((step) => (
             <div key={step} className="flex items-center gap-2">
               <div className="h-1 w-1 rounded-full bg-gold-600 animate-pulse" />
               {step}
@@ -160,11 +159,11 @@ function EmptyState({ loading }: { loading: boolean }) {
       <div className="text-center px-4">
         <p className="text-sm font-semibold text-marble-300">No results yet</p>
         <p className="mt-1 text-xs text-marble-600">
-          Configure your asset and run optimisation to see tomorrow&apos;s bid
+          Configure your asset and run optimisation to review the dispatch scenario
         </p>
       </div>
       <div className="grid grid-cols-2 gap-2.5 text-center text-xs text-marble-600 px-4">
-        {[["96 Slots","15-min resolution"],["MILP","Exact optimal dispatch"],["Ridge ML","Price forecaster"],["Capture %","vs. perfect foresight"]].map(([title, sub]) => (
+        {[["96 Slots","15-min resolution"],["MILP","Optimal dispatch"],["Greek DAM","Bid workflow"],["Analysis","Risk-ready output"]].map(([title, sub]) => (
           <div key={title} className="rounded border border-aegean-700 bg-aegean-900 px-3 py-2.5">
             <p className="font-semibold text-marble-400">{title}</p>
             <p className="mt-0.5">{sub}</p>

@@ -17,7 +17,7 @@ Body:
     }
   }
 
-Returns DispatchResult + price forecast + capture rate.
+Returns DispatchResult + price forecast.
 """
 from __future__ import annotations
 
@@ -61,10 +61,8 @@ def _make_battery(b: dict) -> BatteryAsset:
 def run_optimization(date: str, battery_dict: dict) -> dict:
     prices_all = make_synthetic_greek_dam_prices(start="2024-01-01", end="2026-12-31")
     target = pd.Timestamp(date)
-    day_end = target + pd.Timedelta(days=1)
 
     history = prices_all[prices_all.index < target]
-    actual_slice = prices_all[(prices_all.index >= target) & (prices_all.index < day_end)]
 
     # Forecast
     forecaster_name = "Smart (Ridge + calendar)"
@@ -101,23 +99,10 @@ def run_optimization(date: str, battery_dict: dict) -> dict:
             "capacity_mwh":        float(battery.capacity_mwh),
             "revenue_eur":         0.0,
             "net_revenue_eur":     0.0,
-            "capture_rate":        None,
-            "capture_rate_window": None,
             "cycles":              0.0,
             "status":              result.status,
             "forecaster":          forecaster_name,
         }
-
-    # Perfect-foresight benchmark for capture rate
-    capture_rate = None
-    capture_rate_window = None
-    if len(actual_slice) >= T:
-        pf = opt.optimize(actual_slice.values[:T], dt_hours=DT, enforce_cyclic=True)
-        if pf.is_optimal and pf.objective_eur > 1e-6:
-            capture_rate = float(
-                np.clip(result.objective_eur / pf.objective_eur * 100.0, 0.0, 200.0)
-            )
-            capture_rate_window = "same-day oracle (synthetic data)"
 
     # Clamp SoC to declared operating window to prevent floating-point overshoot
     soc_clamped = np.clip(
@@ -135,8 +120,6 @@ def run_optimization(date: str, battery_dict: dict) -> dict:
         "capacity_mwh":        float(battery.capacity_mwh),
         "revenue_eur":         float(result.revenue_eur),
         "net_revenue_eur":     float(result.objective_eur),
-        "capture_rate":        capture_rate,
-        "capture_rate_window": capture_rate_window,
         "cycles":              float(result.cycles),
         "status":              result.status,
         "forecaster":          forecaster_name,

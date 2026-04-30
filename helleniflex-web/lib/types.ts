@@ -28,8 +28,6 @@ export interface OptimizeResult {
   capacity_mwh:        number;        // total battery capacity
   revenue_eur:         number;
   net_revenue_eur:     number;
-  capture_rate:        number | null;
-  capture_rate_window: string | null;
   cycles:              number;
   status:              string;
   forecaster:          string;
