@@ -157,6 +157,7 @@ export default function ResultsDashboard({ result, date }: Props) {
             socMwh={result.soc_mwh}
             socMinMwh={result.soc_min_mwh}
             socMaxMwh={result.soc_max_mwh}
+            capacityMwh={result.capacity_mwh}
           />
         </ChartCard>
       </div>
