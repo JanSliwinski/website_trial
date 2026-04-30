@@ -9,6 +9,7 @@ interface CardProps {
   label:  string;
   value:  string;
   sub?:   string;
+  sub2?:  string;
   accent: "gold" | "olive" | "azure";
 }
 
@@ -18,7 +19,7 @@ const ACCENT = {
   azure: { text: "text-azure-400", bg: "bg-azure-500/10", border: "border-l-azure-500" },
 };
 
-function Card({ icon, label, value, sub, accent }: CardProps) {
+function Card({ icon, label, value, sub, sub2, accent }: CardProps) {
   const { text, bg, border } = ACCENT[accent];
   return (
     <div className={`rounded border-l-2 border border-aegean-700 ${border} ${bg} p-4`}>
@@ -27,6 +28,7 @@ function Card({ icon, label, value, sub, accent }: CardProps) {
           <p className="helios-label">{label}</p>
           <p className={`mt-2 text-xl font-bold tracking-tight ${text}`}>{value}</p>
           {sub && <p className="mt-0.5 text-[11px] text-marble-500">{sub}</p>}
+          {sub2 && <p className="text-[11px] text-marble-500">{sub2}</p>}
         </div>
         <div className={`ml-2 shrink-0 rounded p-1.5 ${bg} ${text}`}>{icon}</div>
       </div>
@@ -36,7 +38,8 @@ function Card({ icon, label, value, sub, accent }: CardProps) {
 
 export default function KPICards({ result }: { result: OptimizeResult }) {
   const dischargedMwh = result.discharge_mw.reduce((a, b) => a + b, 0) * 0.25;
-  const chargedMwh = result.charge_mw.reduce((a, b) => a + b, 0) * 0.25;
+  const chargedMwh    = result.charge_mw.reduce((a, b) => a + b, 0) * 0.25;
+  const annualised    = result.net_revenue_eur * 365 / result.capacity_mwh;
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       <Card
@@ -44,6 +47,7 @@ export default function KPICards({ result }: { result: OptimizeResult }) {
         label="Net Revenue"
         value={fmtEur(result.net_revenue_eur)}
         sub={`Gross ${fmtEur(result.revenue_eur)}`}
+        sub2={`~${fmtEur(annualised)}/MWh·yr annualised`}
         accent="gold"
       />
       <Card

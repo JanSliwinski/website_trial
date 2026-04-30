@@ -79,6 +79,7 @@ export default function Home() {
               </span>
               <Link href="/backtest#analysis" className="rounded px-2.5 py-1.5 text-[11px] font-medium uppercase tracking-widest text-marble-500 hover:text-marble-300 transition-colors whitespace-nowrap">2. Analysis</Link>
               <Link href="/backtest#backtest" className="rounded px-2.5 py-1.5 text-[11px] font-medium uppercase tracking-widest text-marble-500 hover:text-marble-300 transition-colors whitespace-nowrap">3. Backtest</Link>
+              <Link href="/sources" className="rounded px-2.5 py-1.5 text-[11px] font-medium uppercase tracking-widest text-marble-500 hover:text-marble-300 transition-colors whitespace-nowrap">4. Sources</Link>
             </div>
 
             <div className="hidden items-center gap-4 text-xs text-marble-600 lg:flex">
