@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Zap, Github, Activity } from "lucide-react";
+import Link from "next/link";
+import { Sun, TrendingUp, Loader2 } from "lucide-react";
 import type { BatteryConfig, OptimizeResult } from "@/lib/types";
 import { runOptimize } from "@/lib/api";
 import BatteryForm from "@/components/BatteryForm";
 import ResultsDashboard from "@/components/ResultsDashboard";
 
 export default function Home() {
-  const [result, setResult] = useState<OptimizeResult | null>(null);
+  const [result, setResult]   = useState<OptimizeResult | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError]     = useState<string | null>(null);
   const [activeDate, setActiveDate] = useState("");
 
   async function handleSubmit(date: string, battery: BatteryConfig) {
@@ -20,8 +21,8 @@ export default function Home() {
     try {
       const res = await runOptimize(date, battery);
       setResult(res);
-    } catch (e: any) {
-      setError(e.message ?? "Optimization failed");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Optimisation failed");
     } finally {
       setLoading(false);
     }
@@ -29,87 +30,77 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
-      {/* Grid background */}
+      {/* Subtle gold-grid background */}
       <div
         className="pointer-events-none fixed inset-0 z-0"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(34,211,238,0.03) 1px, transparent 1px), " +
-            "linear-gradient(90deg, rgba(34,211,238,0.03) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
+            "linear-gradient(rgba(200,168,75,0.04) 1px,transparent 1px)," +
+            "linear-gradient(90deg,rgba(200,168,75,0.04) 1px,transparent 1px)",
+          backgroundSize: "56px 56px",
         }}
       />
-
-      {/* Glow orbs */}
-      <div className="pointer-events-none fixed left-1/4 top-0 z-0 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-cyan-500/5 blur-[120px]" />
-      <div className="pointer-events-none fixed right-1/4 bottom-0 z-0 h-[400px] w-[400px] translate-x-1/2 rounded-full bg-blue-500/5 blur-[120px]" />
+      <div className="pointer-events-none fixed left-1/3 top-0 z-0 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-aegean-700/10 blur-[180px]" />
 
       <div className="relative z-10">
-        {/* Nav */}
-        <nav className="border-b border-slate-800/60 bg-navy-950/80 backdrop-blur-md">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/10 ring-1 ring-cyan-500/30">
-                <Zap size={15} className="text-cyan-400" />
+        {/* Navigation */}
+        <nav className="border-b border-aegean-700/60 bg-aegean-950/90 backdrop-blur-sm">
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="flex h-8 w-8 items-center justify-center rounded border border-gold-600/40 bg-gold-500/10 transition-colors group-hover:bg-gold-500/20">
+                <Sun size={15} className="text-gold-400" />
               </div>
-              <span className="font-bold tracking-tight text-white">
-                Hellen<span className="text-cyan-400">iFlex</span>
+              <span className="text-sm font-bold tracking-[0.12em] uppercase text-marble-100 group-hover:text-gold-400 transition-colors">
+                Helios
               </span>
-              <span className="hidden rounded-full bg-cyan-500/10 px-2 py-0.5 text-xs font-medium text-cyan-400 ring-1 ring-cyan-500/20 sm:block">
-                BESS Optimizer
+              <span className="hidden rounded border border-gold-600/30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-gold-500 sm:block">
+                GR · DAM
               </span>
+            </Link>
+
+            <div className="flex items-center gap-1">
+              <span className="rounded border border-gold-600/30 bg-gold-500/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-gold-400">
+                Forecast
+              </span>
+              <Link
+                href="/backtest"
+                className="rounded px-3 py-1.5 text-[11px] font-medium uppercase tracking-widest text-marble-500 hover:text-marble-300 transition-colors"
+              >
+                Backtest
+              </Link>
             </div>
-            <div className="flex items-center gap-3 text-xs text-slate-500">
-              <span className="hidden sm:block">Greek Day-Ahead Market</span>
-              <span className="flex items-center gap-1">
-                <Activity size={12} className="text-emerald-400" />
-                <span className="text-emerald-400">MILP</span>
+
+            <div className="hidden items-center gap-4 text-xs text-marble-600 sm:flex">
+              <span>Greek Day-Ahead Market</span>
+              <span className="flex items-center gap-1 text-olive-500">
+                <TrendingUp size={11} />
+                MILP Optimal
               </span>
             </div>
           </div>
         </nav>
 
-        <main className="mx-auto max-w-7xl px-6 py-10">
-          {/* Hero */}
-          <div className="mb-10 text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-              Battery Arbitrage
+        <main className="mx-auto max-w-7xl px-6 py-8">
+          <div className="mb-7">
+            <h1 className="text-3xl font-bold tracking-tight text-marble-100 sm:text-4xl">
+              Tomorrow&apos;s Bid
             </h1>
-            <p className="mt-3 text-lg text-slate-400">
-              Day-ahead MILP dispatch optimizer · Greek electricity market
+            <p className="mt-1.5 text-sm text-marble-500">
+              Day-ahead dispatch schedule · Greek electricity market · MILP optimisation
             </p>
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs">
-              {[
-                "cvxpy + HiGHS solver",
-                "Ridge price forecaster",
-                "Charge/discharge mutual exclusion",
-                "Cyclic SoC constraint",
-              ].map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-slate-700 bg-slate-800/50 px-2.5 py-1 text-slate-400"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
           </div>
 
-          {/* Main layout */}
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_1fr]">
-            {/* Config panel */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[320px_1fr]">
             <div className="lg:sticky lg:top-6 lg:self-start">
               <BatteryForm onSubmit={handleSubmit} loading={loading} />
             </div>
 
-            {/* Results or empty state */}
             <div>
               {error && (
-                <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+                <div className="mb-4 rounded border border-terra-500/40 bg-terra-500/10 px-4 py-3 text-sm text-terra-400">
                   {error}
                 </div>
               )}
-
               {result ? (
                 <ResultsDashboard result={result} date={activeDate} />
               ) : (
@@ -119,9 +110,8 @@ export default function Home() {
           </div>
         </main>
 
-        {/* Footer */}
-        <footer className="mt-20 border-t border-slate-800/60 py-8 text-center text-xs text-slate-600">
-          <p>HelleniFlex · Battery optimization for the Greek DAM · Synthetic market data</p>
+        <footer className="mt-16 border-t border-aegean-700/40 py-6 text-center text-xs text-marble-600">
+          Helios · Battery optimisation for the Greek DAM · Synthetic market data
         </footer>
       </div>
     </div>
@@ -131,21 +121,17 @@ export default function Home() {
 function EmptyState({ loading }: { loading: boolean }) {
   if (loading) {
     return (
-      <div className="flex h-full min-h-[500px] flex-col items-center justify-center gap-6 rounded-2xl border border-slate-800 bg-navy-900">
-        <div className="relative">
-          <div className="h-16 w-16 rounded-full border-2 border-slate-700" />
-          <div className="absolute inset-0 h-16 w-16 animate-spin rounded-full border-2 border-transparent border-t-cyan-400" />
-          <Zap size={20} className="absolute inset-0 m-auto text-cyan-400" />
-        </div>
+      <div className="flex min-h-[520px] flex-col items-center justify-center gap-6 rounded border border-aegean-700 bg-aegean-900">
+        <Loader2 size={28} className="animate-spin text-gold-500" />
         <div className="text-center">
-          <p className="text-sm font-medium text-slate-300">Solving MILP…</p>
-          <p className="mt-1 text-xs text-slate-500">HiGHS · cvxpy · ~30s cold start</p>
+          <p className="text-sm font-semibold text-marble-200">Solving dispatch&hellip;</p>
+          <p className="mt-1 text-xs text-marble-600">Ridge ensemble · HiGHS MILP · ~30s cold start</p>
         </div>
-        <div className="flex flex-col gap-1.5 text-xs text-slate-600">
-          {["Loading synthetic prices", "Fitting Ridge forecaster", "Running MILP dispatch", "Computing capture rate"].map(
+        <div className="flex flex-col gap-1.5 text-xs text-marble-600">
+          {["Loading price history", "Fitting Ridge ensemble", "Running MILP dispatch", "Computing capture rate"].map(
             (step) => (
               <div key={step} className="flex items-center gap-2">
-                <div className="h-1 w-1 rounded-full bg-slate-600 animate-pulse" />
+                <div className="h-1 w-1 rounded-full bg-gold-600 animate-pulse" />
                 {step}
               </div>
             )
@@ -156,25 +142,25 @@ function EmptyState({ loading }: { loading: boolean }) {
   }
 
   return (
-    <div className="flex h-full min-h-[500px] flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-slate-800 bg-navy-900/50">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-700 bg-navy-900">
-        <Activity size={22} className="text-slate-600" />
+    <div className="flex min-h-[520px] flex-col items-center justify-center gap-5 rounded border border-dashed border-aegean-700 bg-aegean-900/50">
+      <div className="flex h-14 w-14 items-center justify-center rounded border border-aegean-700 bg-aegean-900">
+        <Sun size={24} className="text-gold-600" />
       </div>
       <div className="text-center">
-        <p className="text-sm font-medium text-slate-400">No results yet</p>
-        <p className="mt-1 text-xs text-slate-600">
-          Configure your battery and click Optimize Dispatch
+        <p className="text-sm font-semibold text-marble-300">No results yet</p>
+        <p className="mt-1 text-xs text-marble-600">
+          Configure your asset and run optimisation to see tomorrow&apos;s bid
         </p>
       </div>
-      <div className="mt-2 grid grid-cols-2 gap-3 text-center text-xs text-slate-600">
+      <div className="mt-1 grid grid-cols-2 gap-2.5 text-center text-xs text-marble-600">
         {[
-          ["96 slots", "15-min resolution"],
-          ["MILP", "Binary charge gate"],
-          ["Ridge ML", "Price forecaster"],
+          ["96 Slots",  "15-min resolution"],
+          ["MILP",      "Exact optimal dispatch"],
+          ["Ridge ML",  "Ensemble price forecast"],
           ["Capture %", "vs. perfect foresight"],
         ].map(([title, sub]) => (
-          <div key={title} className="rounded-lg border border-slate-800 bg-navy-950 px-4 py-2">
-            <p className="font-medium text-slate-500">{title}</p>
+          <div key={title} className="rounded border border-aegean-700 bg-aegean-900 px-4 py-2.5">
+            <p className="font-semibold text-marble-400">{title}</p>
             <p className="mt-0.5">{sub}</p>
           </div>
         ))}

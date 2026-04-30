@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "HelleniFlex · Battery Arbitrage",
-  description: "MILP battery dispatch optimizer for the Greek Day-Ahead Market",
+  title: "Helios · Greek Day-Ahead Market",
+  description: "Day-ahead battery arbitrage optimizer for the Greek electricity market",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
-      <body className="min-h-screen bg-[#060e1d] antialiased">{children}</body>
+    <html lang="en">
+      <body className="min-h-screen bg-aegean-950 antialiased">{children}</body>
     </html>
   );
 }
