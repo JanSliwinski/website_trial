@@ -75,9 +75,10 @@ export default function Home() {
 
             <div className="flex items-center gap-0.5 overflow-x-auto">
               <span className="rounded border border-gold-600/30 bg-gold-500/10 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-gold-400 whitespace-nowrap">
-                Forecast
+                1. Forecast
               </span>
-              <Link href="/backtest" className="rounded px-2.5 py-1.5 text-[11px] font-medium uppercase tracking-widest text-marble-500 hover:text-marble-300 transition-colors whitespace-nowrap">Analysis</Link>
+              <Link href="/backtest#analysis" className="rounded px-2.5 py-1.5 text-[11px] font-medium uppercase tracking-widest text-marble-500 hover:text-marble-300 transition-colors whitespace-nowrap">2. Analysis</Link>
+              <Link href="/backtest#backtest" className="rounded px-2.5 py-1.5 text-[11px] font-medium uppercase tracking-widest text-marble-500 hover:text-marble-300 transition-colors whitespace-nowrap">3. Backtest</Link>
             </div>
 
             <div className="hidden items-center gap-4 text-xs text-marble-600 lg:flex">
@@ -91,14 +92,18 @@ export default function Home() {
 
         <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
           {/* Page header */}
-          <div className="mb-6 sm:mb-7">
-            <h1 className="text-2xl font-bold tracking-tight text-marble-100 sm:text-3xl lg:text-4xl">
-              Battery Storage Optimisation
-            </h1>
-            <p className="mt-1.5 text-sm text-marble-500">
-              Dispatch Scenario &middot;{" "}
-              <span className="text-marble-400">{formatDateLong(TOMORROW)}</span>
-            </p>
+          <div className="mb-6 overflow-hidden rounded border border-gold-600/25 bg-aegean-900/80 sm:mb-7">
+            <div className="h-1 bg-gradient-to-r from-azure-500 via-marble-50 to-gold-500" />
+            <div className="px-5 py-5 sm:px-6">
+              <p className="helios-label text-gold-400">1. Forecast</p>
+              <h1 className="mt-2 text-2xl font-bold tracking-tight text-marble-50 sm:text-3xl lg:text-4xl">
+                Forecast Price First, Then Battery Dispatch
+              </h1>
+              <p className="mt-2 text-sm text-marble-500">
+                Greek day-ahead price curve &middot;{" "}
+                <span className="text-marble-300">{formatDateLong(TOMORROW)}</span>
+              </p>
+            </div>
           </div>
 
           {/* Main grid */}

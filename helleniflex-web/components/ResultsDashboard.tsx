@@ -8,6 +8,16 @@ import PriceChart from "./charts/PriceChart";
 import DispatchChart from "./charts/DispatchChart";
 import SoCChart from "./charts/SoCChart";
 import { TIME_LABELS } from "@/lib/utils";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 interface Props {
   result: OptimizeResult;
@@ -62,6 +72,44 @@ function downloadCSV(result: OptimizeResult, date: string) {
   URL.revokeObjectURL(url);
 }
 
+const MARKET_COMPOSITION = [
+  { time: "00:00", renewables: 35, gas: 43, imports: 14, hydro: 8 },
+  { time: "03:00", renewables: 42, gas: 34, imports: 16, hydro: 8 },
+  { time: "06:00", renewables: 48, gas: 30, imports: 13, hydro: 9 },
+  { time: "09:00", renewables: 58, gas: 24, imports: 10, hydro: 8 },
+  { time: "12:00", renewables: 67, gas: 16, imports: 8, hydro: 9 },
+  { time: "15:00", renewables: 61, gas: 22, imports: 9, hydro: 8 },
+  { time: "18:00", renewables: 39, gas: 42, imports: 11, hydro: 8 },
+  { time: "21:00", renewables: 31, gas: 49, imports: 12, hydro: 8 },
+];
+
+function MarketCompositionChart() {
+  return (
+    <ResponsiveContainer width="100%" height={220}>
+      <AreaChart data={MARKET_COMPOSITION} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(23,51,83,0.8)" />
+        <XAxis dataKey="time" tick={{ fill: "#7A8FA8", fontSize: 10 }} tickLine={false} />
+        <YAxis
+          tick={{ fill: "#7A8FA8", fontSize: 10 }}
+          tickLine={false}
+          axisLine={false}
+          width={34}
+          tickFormatter={(v) => `${v}%`}
+        />
+        <Tooltip
+          contentStyle={{ background: "#0C1A2C", border: "1px solid #173353", borderRadius: 4 }}
+          formatter={(value: number) => [`${value}%`, ""]}
+        />
+        <Legend wrapperStyle={{ color: "#7A8FA8", fontSize: 11 }} />
+        <Area type="monotone" dataKey="renewables" stackId="1" name="Renewables" stroke="#4CAF82" fill="#4CAF82" fillOpacity={0.82} />
+        <Area type="monotone" dataKey="gas" stackId="1" name="Gas" stroke="#C8A84B" fill="#C8A84B" fillOpacity={0.78} />
+        <Area type="monotone" dataKey="imports" stackId="1" name="Imports" stroke="#4A7FB5" fill="#4A7FB5" fillOpacity={0.76} />
+        <Area type="monotone" dataKey="hydro" stackId="1" name="Hydro" stroke="#8CB4DE" fill="#8CB4DE" fillOpacity={0.7} />
+      </AreaChart>
+    </ResponsiveContainer>
+  );
+}
+
 export default function ResultsDashboard({ result, date }: Props) {
   const totalDischarge = result.discharge_mw.reduce((a, b) => a + b, 0) * 0.25;
   const totalCharge    = result.charge_mw.reduce((a, b) => a + b, 0) * 0.25;
@@ -95,6 +143,21 @@ export default function ResultsDashboard({ result, date }: Props) {
 
       <KPICards result={result} />
 
+      {/* ── PRICE FORECAST ── */}
+      <ChartCard
+        title="Price Forecast"
+        subtitle={`Range ${minPrice} - ${peakPrice} €/MWh · Model-generated input curve`}
+      >
+        <PriceChart prices={result.forecast_prices} />
+      </ChartCard>
+
+      <ChartCard
+        title="Renewables vs Gas Market Composition"
+        subtitle="Forecast generation mix behind tomorrow's price shape · stacked share of supply"
+      >
+        <MarketCompositionChart />
+      </ChartCard>
+
       {/* ── BID SCHEDULE ── primary chart */}
       <ChartCard
         title="Scenario Bid Schedule"
@@ -122,14 +185,6 @@ export default function ResultsDashboard({ result, date }: Props) {
             Scenario: +{totalBidRevenue.toFixed(2)} €
           </span>
         </div>
-      </ChartCard>
-
-      {/* ── PRICE FORECAST ── */}
-      <ChartCard
-        title="Price Forecast"
-        subtitle={`Range ${minPrice} – ${peakPrice} €/MWh · Model-generated input curve`}
-      >
-        <PriceChart prices={result.forecast_prices} />
       </ChartCard>
 
       {/* ── DISPATCH + SoC ── side by side */}
